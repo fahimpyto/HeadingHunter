@@ -4,7 +4,7 @@
 HeadingHunter is a Playwright-based web scraping tool that extracts all HTML headings (**H1–H6**) from any given webpage URL.  
 It supports both **Single URL scraping** and **Bulk URL scraping** (via `input.txt`) and saves results into a structured **CSV file**.
 
----
+----
 
 ## 🚀 Features
 
