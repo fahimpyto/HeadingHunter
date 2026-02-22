@@ -1,29 +1,30 @@
-````md
+---
+
 # HeadingHunter 🕵️‍♂️📌
 
-HeadingHunter is a Playwright-based web scraping tool that extracts all HTML headings (**H1–H6**) from any given webpage URL.  
+HeadingHunter is a Playwright-based web scraping tool that extracts all HTML headings (**H1–H6**) from any given webpage URL.
 It supports both **Single URL scraping** and **Bulk URL scraping** (via `input.txt`) and saves results into a structured **CSV file**.
 
-----
+---
 
 ## 🚀 Features
 
-✅ Extracts headings: **H1, H2, H3, H4, H5, H6**  
-✅ Supports **Single URL Mode**  
-✅ Supports **Bulk URL Mode** using `input.txt`  
-✅ Saves output in **output.csv**  
-✅ Multiple headings are separated using **new lines** inside CSV cells  
+✅ Extracts headings: **H1, H2, H3, H4, H5, H6**
+✅ Supports **Single URL Mode**
+✅ Supports **Bulk URL Mode** using `input.txt`
+✅ Saves output in **output.csv**
+✅ Multiple headings are separated using **new lines** inside CSV cells
 ✅ Uses Playwright rendering (works even for JavaScript-heavy sites)
 
 ---
 
 ## 📂 Project Files
 
-| File | Description |
-|------|-------------|
-| `HeadingHunter.py` | Main scraper script |
-| `input.txt` | List of URLs for bulk scraping |
-| `output.csv` | Generated output file |
+| File               | Description                    |
+| ------------------ | ------------------------------ |
+| `HeadingHunter.py` | Main scraper script            |
+| `input.txt`        | List of URLs for bulk scraping |
+| `output.csv`       | Generated output file          |
 
 ---
 
@@ -35,7 +36,7 @@ Make sure Python is installed, then run:
 
 ```bash
 pip install playwright beautifulsoup4
-````
+```
 
 ### 2️⃣ Install Playwright browser
 
@@ -163,5 +164,4 @@ Output saved to output.csv
 Developed by **Fahim**
 Project Name: **HeadingHunter**
 
-```
-````
+---
