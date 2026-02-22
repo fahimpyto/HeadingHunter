@@ -1,4 +1,3 @@
-# 
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup as bs
 import csv
@@ -39,7 +38,7 @@ def heading_scraper(url):
 
             browser.close()
 
-            # list -> string (CSV cell er jonno)
+            # list -> string (For CSV cell )
             return {
                 "URL": headings_data["URL"],
                 "H1": " \n ".join(headings_data["H1"]),
