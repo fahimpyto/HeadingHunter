@@ -3,6 +3,16 @@ from bs4 import BeautifulSoup as bs
 import csv
 
 
+
+
+def normal_url(url):
+    url = url.strip()
+    if not url.startswith(("http://", "https://")):
+        url  = "https://" + url
+
+    return url
+
+
 def heading_scraper(url):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -36,7 +46,7 @@ def heading_scraper(url):
                     tag = heading.name.upper()
                     headings_data[tag].append(text)
 
-            browser.close()
+
 
             # list -> string (For CSV cell )
             return {
@@ -50,7 +60,6 @@ def heading_scraper(url):
             }
 
         except Exception as e:
-            browser.close()
             print(f"[ERROR] {url} -> {e}")
             return {
                 "URL": url,
@@ -61,6 +70,8 @@ def heading_scraper(url):
                 "H5": "",
                 "H6": ""
             }
+        finally:
+            browser.close()
 
 
 def bulk_url(file_name="input.txt"):
@@ -74,7 +85,9 @@ def bulk_url(file_name="input.txt"):
 
         results = []
         for url in urls:
-            results.append(heading_scraper(url))
+            clean_url = normal_url(url)
+            data = heading_scraper(clean_url)
+            results.append(data)
 
         # Save to CSV
         with open("output.csv", "w", newline="", encoding="utf-8") as csvfile:
@@ -96,6 +109,7 @@ if __name__ == "__main__":
 
     if choice == "1":
         url = input("Input URL: ")
+        url = normal_url(url)
         data = heading_scraper(url)
 
         with open("output.csv", "w", newline="", encoding="utf-8") as csvfile:
