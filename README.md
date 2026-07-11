@@ -1,167 +1,220 @@
----
+<div align="center">
 
-# HeadingHunter 🕵️‍♂️📌
+# HeadingHunter
 
-HeadingHunter is a Playwright-based web scraping tool that extracts all HTML headings (**H1–H6**) from any given webpage URL.
-It supports both **Single URL scraping** and **Bulk URL scraping** (via `input.txt`) and saves results into a structured **CSV file**.
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue?logo=python&logoColor=white)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?logo=opensourceinitiative)]()
+[![Playwright](https://img.shields.io/badge/Playwright-1.40+-green?logo=google-chrome)]()
 
----
+A professional **SEO heading analysis tool** that extracts and validates HTML heading structure (H1-H6) along with critical SEO meta tags from web pages. Built with Playwright for accurate rendering of JavaScript-heavy sites.
 
-## 🚀 Features
-
-✅ Extracts headings: **H1, H2, H3, H4, H5, H6**
-✅ Supports **Single URL Mode**
-✅ Supports **Bulk URL Mode** using `input.txt`
-✅ Saves output in **output.csv**
-✅ Multiple headings are separated using **new lines** inside CSV cells
-✅ Uses Playwright rendering (works even for JavaScript-heavy sites)
+</div>
 
 ---
 
-## 📂 Project Files
+## Features
 
-| File               | Description                    |
-| ------------------ | ------------------------------ |
-| `HeadingHunter.py` | Main scraper script            |
-| `input.txt`        | List of URLs for bulk scraping |
-| `output.csv`       | Generated output file          |
+### SEO Meta Extraction
+- Page `<title>` tag
+- `<meta name="description">` content
+- `<link rel="canonical">` URL
+- Open Graph tags (`og:title`, `og:description`, `og:image`)
+- `<meta name="robots">` directives
+
+### Heading Analysis
+- Extract all H1-H6 tags with content
+- **Validation**: detects missing H1, multiple H1s, skipped heading levels
+- **Quality check**: flags headings that are too short or too long
+
+### Image SEO
+- Total image count
+- Images missing `alt` attribute
+
+### Performance
+- **Concurrent scraping** via `ThreadPoolExecutor` for bulk mode
+- **Retry logic** with up to 3 attempts on failure
+- **Progress bar** (tqdm) for bulk operations
+
+### Output
+- CSV export (UTF-8 BOM for Excel compatibility)
+- JSON export for API integration
+- Timestamped filenames (no accidental overwrites)
+- CLI arguments for automation
 
 ---
 
-## ⚙️ Installation
+## Quick Start
 
-### 1️⃣ Install Python dependencies
+### Prerequisites
+- Python 3.8+
+- Google Chrome / Chromium (auto-installed by Playwright)
 
-Make sure Python is installed, then run:
+### Installation
 
 ```bash
-pip install playwright beautifulsoup4
+git clone https://github.com/fahimpyto/HeadingHunter.git
+cd HeadingHunter
+pip install -r requirements.txt
+playwright install chromium
 ```
 
-### 2️⃣ Install Playwright browser
+### Analyze a single URL
 
 ```bash
-playwright install
+python HeadingHunter.py --url https://example.com
 ```
 
----
+### Analyze multiple URLs from file
 
-## 🧑‍💻 Usage
+```bash
+python HeadingHunter.py --file urls.txt
+```
 
-Run the script:
+### Interactive mode
 
 ```bash
 python HeadingHunter.py
 ```
 
-You will see:
-
+Then choose:
 ```
-1. Single URL scrape.
-2. Bulk URL Scraping
-Enter Choice (1/2):
+1. Single URL scrape
+2. Bulk URL scraping
 ```
 
 ---
 
-## 🔹 Option 1: Single URL Scraping
-
-Choose:
+## CLI Reference
 
 ```
-1
+usage: HeadingHunter.py [-h] [--url URL | --file FILE]
+                        [--output OUTPUT] [--format {csv,json,both}]
+                        [--workers WORKERS] [--timeout TIMEOUT]
+                        [--visible]
+
+HeadingHunter - SEO Heading Analysis Tool
+
+optional arguments:
+  -h, --help            Show this help message and exit
+  --url URL             Single URL to analyze
+  --file FILE           Path to file with URLs (one per line)
+  --output OUTPUT       Output file path (auto-generated if omitted)
+  --format {csv,json,both}
+                        Output format (default: csv)
+  --workers WORKERS     Concurrent workers for bulk mode (default: 3)
+  --timeout TIMEOUT     Page load timeout in ms (default: 60000)
+  --visible             Show browser window during scraping
 ```
 
-Then enter a URL:
+### Examples
 
-```
-Input URL: https://example.com
-```
+```bash
+# JSON output
+python HeadingHunter.py --url https://example.com --format json
 
-Output will be saved in:
+# Both CSV and JSON
+python HeadingHunter.py --url https://example.com --format both
 
-✅ `output.csv`
+# Bulk with 5 workers, JSON output
+python HeadingHunter.py --file input.txt --workers 5 --format json
 
----
+# Custom filename
+python HeadingHunter.py --url https://example.com --output report.csv
 
-## 🔹 Option 2: Bulk URL Scraping
-
-Choose:
-
-```
-2
-```
-
-The script will read URLs from `input.txt` and scrape them one by one.
-
----
-
-## 📝 How to Write input.txt (IMPORTANT)
-
-Your `input.txt` file must contain:
-
-✅ **One URL per line**
-✅ **No commas (,)**
-✅ **No extra spaces**
-
----
-
-### ✅ Correct Format (Good)
-
-```
-https://diggitymarketing.com/
-https://diggitymarketing.com/reddit-engagement-case-study/
-https://diggitymarketing.com/news-roundup-jan-2026/
+# Show browser for debugging
+python HeadingHunter.py --url https://example.com --visible
 ```
 
 ---
 
-### ❌ Wrong Format (Bad)
+## Input File Format (`input.txt`)
 
-Do NOT write URLs like this:
+One URL per line. No commas, no extra spaces.
 
-```
-https://diggitymarketing.com/,
-https://diggitymarketing.com/reddit-engagement-case-study/,
-https://diggitymarketing.com/news-roundup-jan-2026/,
-```
-
-Comma দিলে URL invalid হয়ে যাবে এবং scraper error দিতে পারে।
-
----
-
-## 📄 Output Format (CSV)
-
-The generated `output.csv` will contain columns like:
-
-| URL | H1 | H2 | H3 | H4 | H5 | H6 |
-| --- | -- | -- | -- | -- | -- | -- |
-
-Each heading type can contain multiple headings separated by **new lines**.
-
----
-
-## 📝 Notes
-
-* If you open `output.csv` in Excel, enable **Wrap Text** to properly view multi-line headings.
-* Bulk scraping may take time depending on the number of URLs.
-* If you get `PermissionError`, close `output.csv` if it's open in Excel.
-
----
-
-## 📌 Example Output Message
-
-After scraping, you will see:
-
-```
-Output saved to output.csv
+```text
+https://example.com
+https://example.com/about
+https://example.com/contact
 ```
 
 ---
 
-## 🔥 Author
+## Output Format
 
-Developed by **Fahim**
-Project Name: **HeadingHunter**
+### CSV Columns
+
+| Column | Description |
+|--------|-------------|
+| URL | Scraped page URL |
+| Title | Page `<title>` tag |
+| Meta Description | `<meta name="description">` content |
+| Canonical URL | `<link rel="canonical">` href |
+| OG Title | `og:title` meta property |
+| OG Description | `og:description` meta property |
+| OG Image | `og:image` meta property |
+| Meta Robots | `robots` meta tag directives |
+| H1-H6 | Heading text (multiple values separated by newlines) |
+| Heading Issues | Heading validation warnings |
+| Total Images | Number of `<img>` tags |
+| Images Missing Alt | Count of images without alt attribute |
+
+### JSON Schema
+
+An array of objects with the same fields as CSV, formatted for programmatic consumption.
 
 ---
+
+## Understanding Heading Issues
+
+| Issue | Severity | Explanation |
+|-------|----------|-------------|
+| Missing H1 tag | Critical | Search engines expect a primary heading |
+| Multiple H1 tags | High | Dilutes topical relevance; use one H1 per page |
+| Skipped heading level | Medium | Breaks content hierarchy (e.g., H1 -> H3 with no H2) |
+| Heading too short (<2 words) | Low | Lacks descriptive context |
+| Heading too long (>15 words) | Low | Loses scannability |
+
+---
+
+## Requirements
+
+```
+playwright>=1.40.0
+beautifulsoup4>=4.12.0
+tqdm>=4.66.0
+```
+
+---
+
+## Development
+
+```bash
+python -m venv venv
+venv\Scripts\activate      # Windows
+source venv/bin/activate   # macOS/Linux
+pip install -r requirements.txt
+playwright install chromium
+```
+
+---
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/my-feature`)
+3. Commit your changes (`git commit -m 'Add my feature'`)
+4. Push to the branch (`git push origin feature/my-feature`)
+5. Open a Pull Request
+
+---
+
+## License
+
+MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+## Author
+
+Developed by **Fahim** ([@fahimpyto](https://github.com/fahimpyto))
+
